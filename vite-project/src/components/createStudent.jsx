@@ -1,4 +1,3 @@
-// createStudent.js
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -14,6 +13,8 @@ function CreateStudent({ fetchData }) {
     const [Class, setClass] = useState('');
     const [image, setImage] = useState('');
     const [feedback, setFeedback] = useState('');
+    const [error, setError] = useState('');
+    const [errorDate, setErrorDate] = useState('');
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -29,11 +30,40 @@ function CreateStudent({ fetchData }) {
         });
     }
 
+    const handleNameChange = (event) => {
+        const value = event.target.value;
+
+        if (value.trim().split(/\s+/).length < 2) {
+            setError('Name must contain at least two words');
+        }
+        else {
+            setName(value);
+        }
+    }
+
+    const handleDateChange = (event) => {
+        const enteredDate = new Date(event.target.value);
+        const currentDate = new Date();
+
+        if (enteredDate >= currentDate) {
+            setErrorDate('Date of birth must be before the current date');
+        }
+        else {
+            setDatofbirth(value);
+
+        }
+    };
+
     const closeAdd = async () => {
+        if (!name || !dateofbirth || !Class || !image) {
+            toast.error("Please fill in all required fields");
+            return;
+        }
+        
         let res = await createStudent(name, dateofbirth, gender, Class, image, feedback);
         if (res) {
             toast.success("Create successfully");
-            fetchData(); // Gọi hàm fetchData để tải lại dữ liệu
+            fetchData();
             handleClose();
         }
     }
@@ -48,54 +78,62 @@ function CreateStudent({ fetchData }) {
                     <Modal.Title>Create new Student</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div>
-                        <label>Name: </label><br />
+                    <form>
+                        <form>
+                            <label>Name: </label><br />
+                            <input
+                                type='text'
+                                placeholder='Name'
+                                value={name}
+                                required
+                                onChange={handleNameChange}
+                            />
+                            {error && <p style={{ color: 'red', marginBottom: 0 }}>{error}</p>}
+                        </form>
+                        <form>
+                            <label>Date of birth: </label><br />
+                            <input
+                                type='date'
+                                placeholder='Date of birth'
+                                required
+                                value={dateofbirth}
+                                onChange={handleDateChange}
+                            />
+                            {errorDate && <p style={{ color: 'red', marginBottom: 0 }}>{errorDate}</p>}
+                        </form>
+                        <label>Gender: </label><br />
+                        <select style={{ marginBottom: "10px" }} onChange={(e) => setGender(e.target.value === 'true')}>
+                            <option value='true'>Male</option>
+                            <option value='false'>Female</option>
+                        </select><br />
+                        <label>Class: </label><br />
                         <input
                             type='text'
-                            placeholder='Name'
-                            style={{ marginBottom: "20px" }}
-                            value={name}
+                            placeholder='Class'
+                            style={{ marginBottom: "10px" }}
                             required=""
-                            onChange={(event) => setName(event.target.value)}
+                            value={Class}
+                            onChange={(event) => setClass(event.target.value)}
                         /><br />
-                    </div>
-                    <label>Date of birth: </label><br />
-                    <input
-                        type='text'
-                        placeholder='Date of birth'
-                        style={{ marginBottom: "20px" }}
-                        value={dateofbirth}
-                        onChange={(event) => setDatofbirth(event.target.value)}
-                    /><br />
-                    <label>Gender: </label><br />
-                    <select onChange={(e) => setGender(e.target.value === 'true')}>
-                        <option value='true'>Male</option>
-                        <option value='false'>Female</option>
-                    </select><br />
-                    <label>Class: </label><br />
-                    <input
-                        type='text'
-                        placeholder='Class'
-                        style={{ marginBottom: "20px" }}
-                        value={Class}
-                        onChange={(event) => setClass(event.target.value)}
-                    /><br />
-                    <label>Image: </label><br />
-                    <input
-                        type='text'
-                        placeholder='Image'
-                        style={{ marginBottom: "20px" }}
-                        value={image}
-                        onChange={(event) => setImage(event.target.value)}
-                    /><br />
-                    <label>Feedback: </label><br />
-                    <input
-                        type='text'
-                        placeholder='Feedback'
-                        style={{ marginBottom: "20px" }}
-                        value={feedback}
-                        onChange={(event) => setFeedback(event.target.value)}
-                    /><br />
+                        <label>Image: </label><br />
+                        <input
+                            type='text'
+                            placeholder='Image'
+                            style={{ marginBottom: "10px" }}
+                            required
+                            value={image}
+                            onChange={(event) => setImage(event.target.value)}
+                        />
+                        <br />
+                        <label>Feedback: </label><br />
+                        <input
+                            type='text'
+                            placeholder='Feedback'
+                            style={{ marginBottom: "10px" }}
+                            value={feedback}
+                            onChange={(event) => setFeedback(event.target.value)}
+                        /><br />
+                    </form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

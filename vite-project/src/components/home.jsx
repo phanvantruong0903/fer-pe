@@ -34,10 +34,10 @@ function Home() {
                 <tbody>
                     {data.map((students) => (
                         <tr key={students.id}>
-                            <td >{students.id}</td>
+                            <td>{students.id}</td>
                             <td>{students.name}</td>
                             <td>{students.dateofbirth}</td>
-                            <td>{students.gender?'Male':'Female'}</td>
+                            <td>{students.gender ? 'Male' : 'Female'}</td>
                             <td>{students.class}</td>
                             <td><img style={{ height: "150px", width: "150px" }} src={students.image}></img></td>
                             <td>

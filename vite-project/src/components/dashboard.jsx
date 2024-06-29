@@ -49,7 +49,7 @@ function Dashboard() {
                             <td>{students.dateofbirth}</td>
                             <td>{students.gender ? 'Male' : 'Female'}</td>
                             <td>{students.class}</td>
-                            <td><img style={{ height: "150px", width: "150px" }} src={students.image} alt="student"></img></td>
+                            <td><img style={{ height: "150px", width: "150px" }} src={students.image}></img></td>
                             <td>
                                 <DetailStudent
                                     id={students.id}
