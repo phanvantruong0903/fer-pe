@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Table from 'react-bootstrap/Table';
+import Card from 'react-bootstrap/Card';
 import DetailStudent from './DetailStudens';
 
 function Home() {
@@ -18,45 +18,35 @@ function Home() {
     }, []);
 
     return (
-        <div>
+        <div className="container">
             <h1>Student List</h1>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Date of birth</th>
-                        <th>Gender</th>
-                        <th>Class</th>
-                        <th>Image</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((students) => (
-                        <tr key={students.id}>
-                            <td>{students.id}</td>
-                            <td>{students.name}</td>
-                            <td>{students.dateofbirth}</td>
-                            <td>{students.gender ? 'Male' : 'Female'}</td>
-                            <td>{students.class}</td>
-                            <td><img style={{ height: "150px", width: "150px" }} src={students.image}></img></td>
-                            <td>
+            <div className="row">
+                {data.map((student) => (
+                    <div className="col-md-4" key={student.id}>
+                        <Card style={{ marginBottom: '20px' }}>
+                            <Card.Img variant="top" src={student.image} width={'100px'} height={'250px'} />
+                            <Card.Body>
+                                <Card.Title>{student.name}</Card.Title>
+                                <Card.Text>
+                                    <strong>ID:</strong> {student.id} <br />
+                                    <strong>Date of Birth:</strong> {student.dateofbirth} <br />
+                                    <strong>Gender:</strong> {student.gender ? 'Male' : 'Female'} <br />
+                                    <strong>Class:</strong> {student.class} <br />
+                                </Card.Text>
                                 <DetailStudent
-                                    id={students.id}
-                                    name={students.name}
-                                    dateofbirth={students.dateofbirth}
-                                    gender={students.gender}
-                                    Class={students.class}
-                                    image={students.image}
-                                    feedback={students.feedback}
+                                    id={student.id}
+                                    name={student.name}
+                                    dateofbirth={student.dateofbirth}
+                                    gender={student.gender}
+                                    Class={student.class}
+                                    image={student.image}
+                                    feedback={student.feedback}
                                 />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-
-
+                            </Card.Body>
+                        </Card>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

@@ -17,7 +17,7 @@ function Delete({ id, fetchData }) {
 
     const handleDelete = async () => {
         let res = await deleteStudent(id);
-        if (res.status === 200) {  // Check if the response status is 200
+        if (res.status === 200) { 
             toast.success("Delete Successful");
             fetchData();
             handleClose();

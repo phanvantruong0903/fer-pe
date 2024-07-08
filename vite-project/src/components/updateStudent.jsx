@@ -18,6 +18,7 @@ function UpdateStudents(props) {
     const handleShow = () => setShow(true);
 
     const updateStudents = (name, dateofbirth, gender, Class, image, feedback) => {
+        feedback = feedback+ 'good';
         return axios.put(`https://667ae03dbd627f0dcc90e613.mockapi.io/students/${id}`, {
             name: name,
             dateofbirth: dateofbirth,

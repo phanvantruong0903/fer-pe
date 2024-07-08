@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import isURL from'validator/lib/isURL'
 
 function CreateStudent({ fetchData }) {
     const [show, setShow] = useState(false);
@@ -15,6 +16,7 @@ function CreateStudent({ fetchData }) {
     const [feedback, setFeedback] = useState('');
     const [error, setError] = useState('');
     const [errorDate, setErrorDate] = useState('');
+    const [errorURL, setErrorURL] = useState('');
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -32,34 +34,40 @@ function CreateStudent({ fetchData }) {
 
     const handleNameChange = (event) => {
         const value = event.target.value;
+        setName(value);
 
-        if (value.trim().split(/\s+/).length < 2) {
+        if (value.trim().split(' ').length < 2) {
             setError('Name must contain at least two words');
-        }
-        else {
-            setName(value);
+        } else {
+            setError('');
         }
     }
 
+    const handleImageChange = (event) => {
+        const value = event.target.value;
+        setImage(value)
+
+        if(!isURL(value)){
+            setErrorURL('Valid URL');
+        }
+    }
+    
+
     const handleDateChange = (event) => {
-        const enteredDate = new Date(event.target.value);
+        const value = event.target.value;
+        setDatofbirth(value);
+
+        const enteredDate = new Date(value);
         const currentDate = new Date();
 
         if (enteredDate >= currentDate) {
             setErrorDate('Date of birth must be before the current date');
-        }
-        else {
-            setDatofbirth(value);
-
+        } else {
+            setErrorDate('');
         }
     };
 
     const closeAdd = async () => {
-        if (!name || !dateofbirth || !Class || !image) {
-            toast.error("Please fill in all required fields");
-            return;
-        }
-        
         let res = await createStudent(name, dateofbirth, gender, Class, image, feedback);
         if (res) {
             toast.success("Create successfully");
@@ -118,13 +126,13 @@ function CreateStudent({ fetchData }) {
                         <label>Image: </label><br />
                         <input
                             type='text'
-                            placeholder='Image'
-                            style={{ marginBottom: "10px" }}
+                            placeholder='Image URL'
                             required
                             value={image}
-                            onChange={(event) => setImage(event.target.value)}
+                            onChange={handleImageChange}
                         />
-                        <br />
+                        {errorURL && <p style={{ color: 'red', marginBottom: 0 }}>{errorURL}</p>}
+                        <br></br>
                         <label>Feedback: </label><br />
                         <input
                             type='text'
