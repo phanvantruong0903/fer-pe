@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Table from 'react-bootstrap/Table';
-import DetailStudent from './DetailStudens';
 import CreateStudent from './createStudent';
 import UpdateStudents from './updateStudent';
 import Delete from './deleteStudent';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Button } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
+
 
 function Dashboard() {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
 
     const fetchData = () => {
         axios.get('https://667ae03dbd627f0dcc90e613.mockapi.io/students')
@@ -49,28 +51,9 @@ function Dashboard() {
                             <td>{students.gender ? 'Male' : 'Female'}</td>
                             <td>{students.class}</td>
                             <td><img style={{ height: "150px", width: "150px" }} src={students.image}></img></td>
+                            <td><Button variant="info" onClick={() => navigate(`/detail/${students.id}`)}>Detail</Button></td>
                             <td>
-                                <DetailStudent
-                                    id={students.id}
-                                    name={students.name}
-                                    dateofbirth={students.dateofbirth}
-                                    gender={students.gender}
-                                    Class={students.class}
-                                    image={students.image}
-                                    feedback={students.feedback}
-                                />
-                            </td>
-                            <td>
-                                <UpdateStudents
-                                    id={students.id}
-                                    name={students.name}
-                                    dateofbirth={students.dateofbirth}
-                                    gender={students.gender}
-                                    Class={students.class}
-                                    image={students.image}
-                                    feedback={students.feedback}
-                                    fetchData={fetchData}
-                                />
+                                <Button variant="warning" onClick={() => navigate(`/update/${students.id}`)}>Update</Button>
                             </td>
                             <td>
                                 <Delete

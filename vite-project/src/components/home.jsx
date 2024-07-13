@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card';
-import DetailStudent from './DetailStudens';
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 function Home() {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('https://667ae03dbd627f0dcc90e613.mockapi.io/students')
@@ -33,15 +35,7 @@ function Home() {
                                     <strong>Gender:</strong> {student.gender ? 'Male' : 'Female'} <br />
                                     <strong>Class:</strong> {student.class} <br />
                                 </Card.Text>
-                                <DetailStudent
-                                    id={student.id}
-                                    name={student.name}
-                                    dateofbirth={student.dateofbirth}
-                                    gender={student.gender}
-                                    Class={student.class}
-                                    image={student.image}
-                                    feedback={student.feedback}
-                                />
+                                <Button variant="info" onClick={() => navigate(`/detail/${student.id}`)}>Detail</Button>
                             </Card.Body>
                         </Card>
                     </div>

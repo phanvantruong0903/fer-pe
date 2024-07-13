@@ -1,40 +1,52 @@
-import { useState } from "react";
-import { Modal } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button, Container } from 'react-bootstrap';
+import axios from 'axios';
 
-function DetailStudent(props) {
-    const {id, name, dateofbirth,gender,Class,image,feedback } = props;
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+const DetailPage = () => {
+
+    const [student, setStudent] = useState({})
+    const { id } = useParams()
+    const navigate = useNavigate()
+
+    const getStudent = async () => {
+        try {
+            const res = await axios.get(`https://667ae03dbd627f0dcc90e613.mockapi.io/students/${id}`)
+            if (res && res.data) {
+                setStudent(res.data)
+            }
+        } catch (error) {
+            console.error(error.error)
+        }
+    }
+
+    useEffect(() => {
+        getStudent()
+    }, [])
 
     return (
-        <>
-            <Button variant="info" onClick={handleShow}>
-                Details
-            </Button>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Details Student </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>ID: {id}</p>
-                    <p>Name: {name}</p>
-                    <p>Date of birth: {dateofbirth}</p>
-                    <p>gender: {gender?'Male':'Female'}</p>
-                    <p>class: {Class}</p>
-                    <p>image: <img style={{ height: "150px", width: "150px" }} src={image}></img></p>
-                    <p>Feedback: {feedback}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+        <div>
+            <Button variant="outline-primary" style={{ margin: "10px" }} onClick={() => navigate(-1)}>Back</Button>
+            <Container>
+                <div className="detail-container">
+                    <h2>STUDENT INFORMATION</h2>
+                    <div className="content-container">
+                        <div className="img-container">
+                            <img src={student.image} alt="Student" />
+                        </div>
+                        <div className="detail-content">
+                            <label data-label="Name:">{student.name}</label>
+                            <label data-label="Date of birth:">{student.dateofbirth}</label>
+                            <label data-label="Gender:">{`${student.gender}` === "true" ? "male" : "female"}</label>
+                            <label data-label="Class:">{student.class}</label>
+                            <label data-label="Feedback:">{student.feedback}</label>
+                        </div>
+                    </div>
+                </div>
+
+            </Container >
+        </div>
     )
 }
 
-export default DetailStudent;
-
+export default DetailPage
